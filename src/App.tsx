@@ -1,7 +1,7 @@
 
 import React, { Suspense } from "react"
 import { PATH } from "./configs"
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
 
 const Dashboard = React.lazy(() => import('./pages/dashboard'));
 const Login = React.lazy(() => import('./pages/login'));
@@ -19,44 +19,61 @@ const EmployeeEdit = React.lazy(() => import('./pages/employee/edit'));
 // import EmployeeShow from "./pages/employee/show"
 // import EmployeeCreate from "./pages/employee/create"
 // import EmployeeEdit from "./pages/employee/edit"
-
-
 import InvoiceCreate from "./pages/invoice/create";
 import InvoiceList from "./pages/invoice/list";
+import { Home } from "./pages/home";
 
 // components
-import Sidebar from "./components/sidebar/sidebar"
-import Headerbar from "./components/headerbar/headerbar"
+import Template1 from "./layouts/template1";
+import AuthRoute from "./routes/auth-route";
+import GuestRoute from "./routes/guest-route";
 
+/*
+authenticated
+go to invoice -> login -> redirect to invoice
+
+not login
+home -> product -> checkout -> click Buy ->:
+*/
 
 function App() {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    const isExculed = location.pathname === PATH.LOGIN || location.pathname === PATH.REGISTER;
+    if (!isExculed) {
+      window.localStorage.setItem('previousUrl', location.pathname)
+    }
+  }, [location])
 
   return (
-    <div className="min-h-screen xl:flex">
-      <div>
-        <Sidebar />
-      </div>
-      <div className="flex-1 transition-all duration-300 ease-in-out lg:ml-[290px] ">
-        <Headerbar />
-        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-          <Suspense fallback={<>Loading...</>}>
-            <Routes>
-              <Route path={PATH.DASHBOARD} element={<Dashboard />} />
-              <Route path={PATH.LOGIN} element={<Login />} />
-              <Route path={PATH.REGISTER} element={<Register />} />
-              <Route path={PATH.EMPLOYEE_LIST} element={<EmployeeList />} />
-              <Route path={PATH.EMPLOYEE_CREATE} element={<EmployeeCreate />} />
-              <Route path={PATH.EMPLOYEE_SHOW} element={<EmployeeShow />} />
-              <Route path={PATH.EMPLOYEE_EDIT} element={<EmployeeEdit />} />
+    <>
+      <Suspense fallback={<>Loading...</>}>
+        <Routes>
+          <Route 
+            path={PATH.ROOT} 
+            element={
+              <AuthRoute>
+                <Template1>
+                  <Dashboard />
+                </Template1>
+              </AuthRoute>}
+          />
+          <Route path={PATH.HOME} element={<Home />} />
+          <Route path={PATH.LOGIN} element={<GuestRoute><Login /></GuestRoute>} />
+          <Route path={PATH.REGISTER} element={<GuestRoute><Register /></GuestRoute>} />
 
-              <Route path={PATH.INVOICE_CREATE}  element={<InvoiceCreate />} />
-              <Route path={PATH.INVOICE_LIST}  element={<InvoiceList />} />
-            </Routes>
-          </Suspense>
-          
-        </div>
-      </div>
-    </div>
+          <Route path={PATH.EMPLOYEE_LIST} element={<Template1><EmployeeList /></Template1>} />
+          <Route path={PATH.EMPLOYEE_CREATE} element={<Template1><EmployeeCreate /></Template1>} />
+          <Route path={PATH.EMPLOYEE_SHOW} element={<Template1><EmployeeShow /></Template1>} />
+          <Route path={PATH.EMPLOYEE_EDIT} element={<Template1><EmployeeEdit /></Template1>} />
+
+          <Route path={PATH.INVOICE_CREATE}  element={<Template1><InvoiceCreate /></Template1>} />
+          <Route path={PATH.INVOICE_LIST}  element={<Template1><InvoiceList /></Template1>} />
+        </Routes>
+      </Suspense>
+    </>
+    
   )
 }
 

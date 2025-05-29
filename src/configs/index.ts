@@ -12,7 +12,8 @@ export const PATH = {
   EMPLOYEE_SHOW: '/employee/show/:id',
   EMPLOYEE_EDIT: '/employee/edit/:id',
   INVOICE_CREATE: '/invoice/create',
-  INVOICE_LIST: '/invoice/list'
+  INVOICE_LIST: '/invoice/list',
+  HOME: '/home'
 }
 
 export const ROLE = {
