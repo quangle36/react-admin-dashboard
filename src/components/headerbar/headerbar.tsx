@@ -5,6 +5,7 @@ import { useSidebarContext } from "../../contexts/sidebar-context";
 import { useThemeContext } from "../../contexts/theme-context"; 
 
 import ThemeButton from "../../components/ui/button/theme-button";
+import UserDropdown from "../ui/dropdown/user-dropdown";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -162,7 +163,7 @@ const AppHeader: React.FC = () => {
             />
             {/* <NotificationDropdown /> */}
           </div>
-          {/* <UserDropdown /> */}
+          <UserDropdown />
         </div>
       </div>
     </header>

@@ -11,11 +11,32 @@ function Login() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-      // call api success -> return access_token
-    const access_token = 'tony';
-    window.localStorage.setItem('access_token', access_token)
-    const fallbackUrl = searchParams.get('fallbackUrl');
-    navigate(fallbackUrl ? "/" + fallbackUrl : PATH.ROOT);
+
+    try {
+      const bodyData = {
+        data: {
+          email: "admin@gmail.com",
+          password: "123456"
+        }
+      }
+      const response = await fetch('https://tony-auth-express-vdee-6j0s-fhovok9bu.vercel.app/api/user/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bodyData)
+      })
+      const data = await response.json();
+
+      if (data.isSucess) {
+        const access_token = data.data.access_token;
+        window.localStorage.setItem('access_token', access_token);
+        const fallbackUrl = searchParams.get('fallbackUrl');
+        navigate(fallbackUrl ? "/" + fallbackUrl : PATH.ROOT);
+      }
+    } catch (e) {
+      console.log('Fail Login: ', e)
+    }
   }
 
   // function passParamOnUrl() {
