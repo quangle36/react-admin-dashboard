@@ -1,7 +1,6 @@
-
-import React from "react"
-import { PATH } from "./configs"
-import { useLocation } from "react-router-dom"
+import React from 'react';
+import { PATH } from './configs';
+import { useLocation } from 'react-router-dom';
 
 // const EmployeeList = React.lazy(() => import('./pages/employee').then((module) => ({ default: module.EmployeeList })));
 // const EmployeeShow = React.lazy(() => import('./pages/employee').then((module) => ({ default: module.EmployeeShow })));
@@ -11,7 +10,8 @@ import { useLocation } from "react-router-dom"
 // import EmployeeShow from "./pages/employee/show"
 // import EmployeeCreate from "./pages/employee/create"
 // import EmployeeEdit from "./pages/employee/edit"
-import { MainRoute } from "./routes/main-route";
+import { MainRoute } from './routes/main-route';
+import { ToastContainer } from 'react-toastify';
 
 /*
 authenticated
@@ -22,21 +22,22 @@ home -> product -> checkout -> click Buy ->:
 */
 
 function App() {
-  const location = useLocation();
+	const location = useLocation();
 
-  React.useEffect(() => {
-    const isExculed = location.pathname === PATH.LOGIN || location.pathname === PATH.REGISTER;
-    if (!isExculed) {
-      window.localStorage.setItem('previousUrl', location.pathname)
-    }
-  }, [location])
+	React.useEffect(() => {
+		const isExculed =
+			location.pathname === PATH.LOGIN || location.pathname === PATH.REGISTER;
+		if (!isExculed) {
+			window.localStorage.setItem('previousUrl', location.pathname);
+		}
+	}, [location]);
 
-  return (
-    <>
-      <MainRoute />
-    </>
-    
-  )
+	return (
+		<>
+			<MainRoute />
+			<ToastContainer />
+		</>
+	);
 }
 
-export default App
+export default App;

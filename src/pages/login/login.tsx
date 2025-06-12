@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TextInput from '../../components/ui/input/text-input';
 import TextButton from '../../components/ui/button/text-button';
@@ -22,15 +22,7 @@ function Login() {
 		control,
 		formState: { errors },
 	} = useForm<LoginFormInputs>();
-	const notify = () =>
-		toast.success('Login successful!', {
-			position: 'top-right',
-			autoClose: 3000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true,
-		});
+
 	async function onSubmit({ email, password }: LoginFormInputs) {
 		try {
 			const bodyData = {
@@ -56,18 +48,10 @@ function Login() {
 				window.localStorage.setItem('access_token', access_token);
 				const fallbackUrl = searchParams.get('fallbackUrl');
 				navigate(fallbackUrl ? '/' + fallbackUrl : PATH.ROOT);
-				toast.success('Login successful!', {
-					position: 'top-right',
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.success('Login successful!');
 			} else {
 				toast.error('Login failed. Please check your credentials.');
 			}
-			notify();
 		} catch (e) {
 			console.log('Fail Login: ', e);
 			toast.error('An error occurred. Please try again later.');
@@ -80,7 +64,6 @@ function Login() {
 
 	return (
 		<div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
-			<button onClick={notify}>test</button>
 			<div className="relative flex flex-col justify-center w-full h-screen lg:flex-row dark:bg-gray-900 sm:p-0">
 				<div className="flex flex-col flex-1">
 					{/* <div className="w-full max-w-md pt-10 mx-auto">
@@ -263,18 +246,6 @@ function Login() {
 					</div>
 				</div>
 			</div>
-			<ToastContainer
-				position="top-right"
-				autoClose={3000}
-				hideProgressBar={false}
-				newestOnTop
-				closeOnClick
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme="light"
-			/>
 		</div>
 	);
 }
