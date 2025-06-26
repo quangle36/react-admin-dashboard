@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams} from "react-router-dom";
 import TextInput from "../../components/ui/input/text-input";
 import TextButton from "../../components/ui/button/text-button";
 import { PATH } from "../../configs";
+import { httpRequest } from "../../services/initRequest";
 
 function Login() {
   const [searchParams] = useSearchParams();
@@ -19,18 +20,15 @@ function Login() {
           password: "123456"
         }
       }
-      const response = await fetch('https://tony-auth-express-vdee-6j0s-fhovok9bu.vercel.app/api/user/signin', {
+      const response: any = await httpRequest('/api/user/signin', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bodyData)
+        data: bodyData
       })
-      const data = await response.json();
-
-      if (data.isSucess) {
-        const access_token = data.data.access_token;
+      if (response.isSucess) {
+        const access_token = response.data.access_token;
+        const refresh_token = response.data.refresh_token;
         window.localStorage.setItem('access_token', access_token);
+        window.localStorage.setItem('refresh_token', refresh_token);
         const fallbackUrl = searchParams.get('fallbackUrl');
         navigate(fallbackUrl ? "/" + fallbackUrl : PATH.ROOT);
       }

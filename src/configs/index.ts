@@ -1,4 +1,4 @@
-export const API_ENDPOINT = 'localhost:3000';
+export const API_ENDPOINT = 'https://tony-auth-express-vdee-6j0s-fhovok9bu.vercel.app';
 
 export const PATH = {
   DASHBOARD: '/',

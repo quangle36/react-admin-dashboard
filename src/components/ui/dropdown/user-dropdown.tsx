@@ -2,11 +2,14 @@ import { useState } from "react";
 import { PATH } from "../../../configs";
 import { DropdownItem } from "./dropdown-item";
 import { DropdownField } from "./dropdown-field";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
 
 // 5 page -> 3 call api -> send token in header api (x3) -> server get token -> from token get user -> yes -> accept api -> return data
 // 10 page -> 30 api -> send token in header api x30
 
 export default function UserDropdown() {
+  const user = useSelector((state: RootState) => state.app.user);
   const [isOpen, setIsOpen] = useState(false);
 
   function handleLogout() {
@@ -60,10 +63,10 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Admin
+            {user?.role}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            admin@gmail.com
+            {user?.email}
           </span>
         </div>
 

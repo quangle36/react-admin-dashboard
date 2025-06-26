@@ -1,9 +1,13 @@
 import React from 'react'
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { PATH } from "../configs";
+import { setUser } from '../redux/appSlice';
+import { httpRequest } from '../services/initRequest';
 
 function AuthRoute({ children }: React.PropsWithChildren) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const access_token = window.localStorage.getItem('access_token');
@@ -13,16 +17,11 @@ function AuthRoute({ children }: React.PropsWithChildren) {
 
     async function checkAuthenticateToken() {
       try {
-        const response = await fetch('https://tony-auth-express-vdee-6j0s-fhovok9bu.vercel.app/api/auth', {
+        const response: any = await httpRequest('/api/auth', {
           method: 'POST',
-          headers: {
-            'x-auth-token': access_token || ''
-          },
         })
-        const data = await response.json();
-  
-        if (data.isSuccess) {
-          console.log('authenticate success: ', data.user.user)
+        if (response.isSuccess) {
+          dispatch(setUser(response?.user?.user))
           setIsAuthenticated(true);
         } else {
           navigate(PATH.LOGIN);
@@ -34,7 +33,7 @@ function AuthRoute({ children }: React.PropsWithChildren) {
       }
     }
     checkAuthenticateToken();
-  }, [access_token])
+  }, [])
 
   if (!access_token) {
     return <Navigate to={PATH.LOGIN} />

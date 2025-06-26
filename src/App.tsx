@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom"
 // import EmployeeCreate from "./pages/employee/create"
 // import EmployeeEdit from "./pages/employee/edit"
 import { MainRoute } from "./routes/main-route";
+import TimeOutModal from "./components/modal/timeout-modal";
 
 /*
 authenticated
@@ -33,6 +34,8 @@ function App() {
 
   return (
     <>
+      <TimeOutModal />
+
       <MainRoute />
     </>
     
