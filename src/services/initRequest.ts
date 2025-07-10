@@ -32,9 +32,7 @@ export function initRequest(store: any) {
       store.dispatch(setLoading(false))
     }
     return response.data;
-  }, function (error) {
-    console.log('error: ', error)
-
+  }, async function (error) {
     // handle timeout
     if(error.code === "ECONNABORTED") {
       // code logic
@@ -42,10 +40,14 @@ export function initRequest(store: any) {
     }
 
     // access token expired & refresh token
+    {/* 
+      - login success -> return access token with 30s 
+      - after 30s -> click "Get Authenticate User" -> inject access token -> BE check access token expired -> system auto call api refresh token -> system auto call api "Get Authenticate User"
+    */}
     if(error.status = 401) {
       try {
         const refresh_token = window.localStorage.getItem('refresh_token');
-        const response: any = httpRequest('/api/user/refresh-token', {
+        const response: any = await httpRequest('/api/user/refresh-token', {
           method: 'POST',
           data: {
             data: {

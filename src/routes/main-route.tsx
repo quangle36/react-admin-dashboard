@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { PATH } from "../configs";
+import { PATH, ROLE } from "../configs";
 import { Home } from "../pages/home";
 
 // routes
@@ -10,6 +10,9 @@ import GuestRoute from "./guest-route";
 
 // layout
 import Template1 from "../layouts/template1";
+import Template2 from "../layouts/template2";
+import DefaultSpinner from "../components/ui/spinner/default-spinner";
+import RoleRoute from "./role-route";
 
 // pages
 const Dashboard = React.lazy(() => import('../pages/dashboard'));
@@ -21,15 +24,37 @@ const EmployeeCreate = React.lazy(() => import('../pages/employee/create'));
 const EmployeeEdit = React.lazy(() => import('../pages/employee/edit'));
 const InvoiceCreate = React.lazy(() => import('../pages/invoice/create'));
 const InvoiceList = React.lazy(() => import('../pages/invoice/list'));
+const Error403 = React.lazy(() => import('../pages/error/Error403'));
+
+
+function renderTemplate(company: string = 'tony') {
+  let template = Template1;
+
+  switch (company) {
+    case 'tony': {
+      template = Template1;
+      break;
+    }
+    case 'quang': {
+      template = Template2;
+      break;
+    }
+    default:
+      break
+  }
+  return template
+}
 
 function renderMainRoutes() {
+
+
 
   const routesConfig = [
     {
       path: PATH.ROOT,
       component: Dashboard,
       guard: AuthRoute,
-      layout: Template1
+      layout: renderTemplate(),
     },
     {
       path: PATH.HOME,
@@ -61,19 +86,22 @@ function renderMainRoutes() {
       path: PATH.EMPLOYEE_CREATE,
       component: EmployeeCreate,
       guard: AuthRoute,
-      layout: Template1
+      layout: Template1,
+      requireRoles: [ROLE.ADMIN, ROLE.OPERATOR]
     },
     {
       path: PATH.EMPLOYEE_EDIT,
       component: EmployeeEdit,
       guard: AuthRoute,
-      layout: Template1
+      layout: Template1,
+      requireRoles: [ROLE.ADMIN, ROLE.OPERATOR]
     },
      {
       path: PATH.INVOICE_CREATE,
       component: InvoiceCreate,
       guard: AuthRoute,
-      layout: Template1
+      layout: Template1,
+      requireRoles: [ROLE.ADMIN, ROLE.OPERATOR]
     },
     {
       path: PATH.INVOICE_LIST,
@@ -81,16 +109,21 @@ function renderMainRoutes() {
       guard: AuthRoute,
       layout: Template1
     },
+     {
+      path: PATH.ERROR_403,
+      component: Error403,
+    },
   ]
 
   return (
     <>
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<DefaultSpinner />}>
         <Routes>
           {routesConfig.map(route => {
             const Guard = route?.guard || React.Fragment; // <AuthRoute></AuthRoute>
             const Component = route?.component || React.Fragment;
             const Layout = route?.layout || React.Fragment;
+            const requireRoles = route?.requireRoles || [];
 
             return (
               <Route 
@@ -98,7 +131,9 @@ function renderMainRoutes() {
                 element={
                   <Guard>
                     <Layout>
-                      <Component />
+                      <RoleRoute requireRoles={requireRoles}>
+                        <Component />
+                      </RoleRoute>
                     </Layout>
                   </Guard>
                 }
