@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
@@ -13,19 +13,22 @@ import { ThemeProvider } from './contexts/theme-context.tsx';
 
 import { store } from './store.ts'
 import { initRequest } from './services/initRequest.ts'
+// import { ErrorCatchComponent } from './components/error-boundary.tsx';
 
 initRequest(store);
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider>
-        <SidebarProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </SidebarProvider>
-      </ThemeProvider>
-    </Provider>
+  // <ErrorCatchComponent>
+  <Provider store={store}>
+    <ThemeProvider>
+      <SidebarProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </SidebarProvider>
+    </ThemeProvider>
+  </Provider>
+  // </ErrorCatchComponent>
   // </StrictMode>,
 )

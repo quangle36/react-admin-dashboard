@@ -55,11 +55,17 @@ export function initRequest(store: any) {
             }
           }
         });
+        console.log('response referesh token success', response);
+        
+
         const access_token = response.data.access_token;
+
+
         window.localStorage.setItem('access_token', access_token);
         httpRequest.defaults.headers['x-auth-token'] = access_token;
         return httpRequest(error.config);
       } catch (error) {
+        console.log('response referesh token error', error);
         return Promise.reject(error);
       }
     }

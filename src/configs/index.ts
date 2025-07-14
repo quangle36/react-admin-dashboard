@@ -1,5 +1,5 @@
-// export const API_ENDPOINT = 'https://tony-auth-express-vdee.vercel.app';
-export const API_ENDPOINT = 'http://localhost:3000'; // run localhost
+export const API_ENDPOINT = 'https://tony-auth-express-vdee.vercel.app';
+// export const API_ENDPOINT = 'http://localhost:3000'; // run localhost
 
 export const PATH = {
   DASHBOARD: '/',
